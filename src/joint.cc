@@ -442,6 +442,18 @@ std::ostream& operator<<(std::ostream& os, const hpp::model::Joint& joint)
   } else {
     os << "No dynamic part" << std::endl;
   }
+  std::vector<CkppSolidComponentRefShPtr> solidComps;
+  joint.kppJoint ()->getSolidComponentRefVector (solidComps);
+  CkitMat4 position;
+  os << "solid components" << std::endl;
+  for (std::vector<CkppSolidComponentRefShPtr>::iterator it =
+	 solidComps.begin(); it != solidComps.end (); it++) {
+    CkppSolidComponentShPtr solidComp ((*it)->referencedSolidComponent ());
+    solidComp->getAbsolutePosition (position);
+    os << "name: " << solidComp->name () << std::endl;
+    os << "position :" << std::endl;
+    os << position << std::endl;
+  }
   for (unsigned int iChild=0; iChild < joint.countChildJoints();
        iChild++) {
     os << *(joint.childJoint(iChild)) << std::endl;
